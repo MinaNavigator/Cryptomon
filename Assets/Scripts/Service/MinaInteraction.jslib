@@ -15,7 +15,8 @@
      var signContent = {
             message : UTF8ToString(data)
         };
-      var returnValue = await window.mina.signMessage(signContent);
+      var signature = await window.mina.signMessage(signContent);
+      var returnValue = JSON.stringify(signature);
       var result = "";
       if(returnValue !== null) {
             var bufferSize = lengthBytesUTF8(returnValue) + 1;
