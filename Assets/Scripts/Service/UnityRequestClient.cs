@@ -11,6 +11,7 @@ public class UnityRequestClient
 
         using (var unityRequest = new UnityWebRequest(url, "GET"))
         {
+            Debug.Log("token bearer " + GameContext.Instance.Token);
             if (!string.IsNullOrEmpty(GameContext.Instance.Token))
             {
                 unityRequest.SetRequestHeader("Authorization", "Bearer " + GameContext.Instance.Token);
@@ -56,6 +57,7 @@ public class UnityRequestClient
 
         using (var unityRequest = new UnityWebRequest(url, "POST"))
         {
+            Debug.Log("token bearer " + GameContext.Instance.Token);
             if (!string.IsNullOrEmpty(GameContext.Instance.Token))
             {
                 unityRequest.SetRequestHeader("Authorization", "Bearer " + GameContext.Instance.Token);
@@ -177,7 +179,7 @@ public class UnityRequestClient
 #endif
                 throw new InvalidOperationException("Error server " + unityRequest.error);
             }
-          
+
 
         }
     }

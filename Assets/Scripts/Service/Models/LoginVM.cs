@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 public class TokenResponse
 {
-    [JsonProperty("accessToken")]
+    [JsonProperty("token")]
     public string Token { get; set; }
 
     [JsonProperty("refreshToken")]

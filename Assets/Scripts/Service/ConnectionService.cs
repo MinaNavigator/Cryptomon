@@ -54,7 +54,7 @@ public class ConnectionService
     public static async Task<AccountDto> Register(AccountDto account)
     {
         Debug.Log("register");
-        var url = $"{serviceUrl}api/account/register";
+        var url = $"{serviceUrl}api/auth/register";
         var response = await UnityRequestClient.Post<AccountDto>(url, account);
          Debug.Log("name" + response.Username);      
         return response;
