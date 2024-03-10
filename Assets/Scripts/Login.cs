@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Login : MonoBehaviour
@@ -52,6 +53,7 @@ public class Login : MonoBehaviour
             if (!string.IsNullOrEmpty(accountDto.Username))
             {
                 title.text = $"Welcome {accountDto.Username}";
+                SceneManager.LoadSceneAsync("Game");
             }
             else
             {
@@ -82,6 +84,7 @@ public class Login : MonoBehaviour
             var accountRegistered = await ConnectionService.Register(account);
             GameContext.Instance.Account = accountRegistered;
             title.text = $"Welcome {accountRegistered.Username}";
+            SceneManager.LoadSceneAsync("Game");
         }
         catch (System.Exception ex)
         {
