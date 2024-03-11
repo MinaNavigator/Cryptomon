@@ -32,5 +32,23 @@ namespace Assets.Scripts.Service
             Debug.Log("land loaded");
             return response;
         }
+
+        public static async Task<PlantingDto> AddPlant(PlantingDto plant)
+        {
+            Debug.Log("add plant");
+            var url = $"{serviceUrl}api/land/planting";
+            var response = await UnityRequestClient.Post<PlantingDto>(url, plant);
+            Debug.Log("plant added");
+            return response;
+        }
+
+        public static async Task<PlantingDto> HarvestPlant(PlantingDto plant)
+        {
+            Debug.Log("harvest plant");
+            var url = $"{serviceUrl}api/land/harvest";
+            var response = await UnityRequestClient.Post<PlantingDto>(url, plant);
+            Debug.Log("plant harvested");
+            return response;
+        }
     }
 }
