@@ -5,8 +5,9 @@ using UnityEngine;
 [CreateAssetMenu]
 public class CropSo : ScriptableObject
 {
+    public Sprite presentation;
     public Sprite seed;
     public Sprite leaf;
     public Sprite plant;
-    public int MinLevel { get; set; }
+    public int minLevel;
 }
