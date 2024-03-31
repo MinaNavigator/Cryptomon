@@ -36,7 +36,7 @@ namespace Assets.Scripts.Service
         public static async Task<PlantingDto> AddPlant(PlantingDto plant)
         {
             Debug.Log("add plant");
-            var url = $"{serviceUrl}api/land/planting";
+            var url = $"{serviceUrl}api/land/AddPlant";
             var response = await UnityRequestClient.Post<PlantingDto>(url, plant);
             Debug.Log("plant added");
             return response;
@@ -45,7 +45,7 @@ namespace Assets.Scripts.Service
         public static async Task<PlantingDto> HarvestPlant(PlantingDto plant)
         {
             Debug.Log("harvest plant");
-            var url = $"{serviceUrl}api/land/harvest";
+            var url = $"{serviceUrl}api/land/HarvestPlant";
             var response = await UnityRequestClient.Post<PlantingDto>(url, plant);
             Debug.Log("plant harvested");
             return response;

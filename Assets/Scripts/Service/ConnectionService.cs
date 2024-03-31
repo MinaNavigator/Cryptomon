@@ -48,6 +48,7 @@ public class ConnectionService
         var url = $"{serviceUrl}api/auth/GetAccount";
         var response = await UnityRequestClient.Get<AccountDto>(url);
         Debug.Log("name" + response.Username);
+        Debug.Log("amount" + response.CoinBalance);
         return response;
     }
 

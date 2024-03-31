@@ -16,7 +16,7 @@ public class CropTileBase : TileBase
     {
         get
         {
-            var time = DateTime.Now - plantingDto.PlantingDate;
+            var time = DateTime.UtcNow - plantingDto.PlantingDate;
             return time.TotalSeconds >= cropSo.growTime;
         }
     }
@@ -28,7 +28,7 @@ public class CropTileBase : TileBase
         tileData.sprite = cropSo.plantStates[0];
         if (plantingDto != null)
         {
-            var time = DateTime.Now - plantingDto.PlantingDate;
+            var time = DateTime.UtcNow - plantingDto.PlantingDate;
             if (time.TotalSeconds > 10)
             {
                 // grow over the time care divide by zero

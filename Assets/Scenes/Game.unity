@@ -18751,6 +18751,7 @@ MonoBehaviour:
   - {fileID: 412654022}
   - {fileID: 595339106}
   - {fileID: 1374662360}
+  textAmount: {fileID: 1450845673}
 --- !u!4 &1932479136
 Transform:
   m_ObjectHideFlags: 0

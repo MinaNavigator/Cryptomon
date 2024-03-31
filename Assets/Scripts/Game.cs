@@ -10,6 +10,7 @@ using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
+using UnityEngine.UIElements;
 
 public class Game : MonoBehaviour
 {
@@ -21,13 +22,15 @@ public class Game : MonoBehaviour
     public List<CropTileBase> cropTiles = new List<CropTileBase>();
     public CropSo selectedCrop;
     public List<BoxCollider2D> holesPosition;
+    public TextMeshProUGUI textAmount;
 
     const string HOLE_NAME = "tileset_16px_777";
 
     // Start is called before the first frame update
     void Start()
     {
-        //GetLand();
+        GetLand();
+        textAmount.text = GameContext.Instance?.Account?.CoinBalance.ToString("C2");
 
         selectedCrop = crops[0];
     }
@@ -47,39 +50,19 @@ public class Game : MonoBehaviour
             Debug.Log(tile);
             if (tile?.name == HOLE_NAME)
             {
-                var plant = new PlantingDto() { PlantingDate = DateTime.Now };
-                var pos = holesPosition.Where(i => i.OverlapPoint(worldPoint)).First();
-                AddPlant(pos, plant);
-
+                var hole = holesPosition.Where(i => i.OverlapPoint(worldPoint)).First();
+                AddNewPlant(hole);
             }
 
             var found = cropTiles.FirstOrDefault(x => x == tile);
             if (found?.CanHarvest == true)
             {
-                tilemapHole.SetTile(position, tileHole);
-                cropTiles.Remove(found);
+                var hole = holesPosition.Where(i => i.OverlapPoint(worldPoint)).First();
+                Harvest(hole, found);
             }
         }
     }
 
-
-    Dictionary<Vector3Int, TileBase> GetAllTiles()
-    {
-        BoundsInt bounds = tilemapHole.cellBounds;
-        Dictionary<Vector3Int, TileBase> result = new Dictionary<Vector3Int, TileBase>();
-
-        foreach (var pos in tilemapHole.cellBounds.allPositionsWithin)
-        {
-            Vector3Int localPlace = new Vector3Int(pos.x, pos.y, pos.z);
-            if (tilemapHole.HasTile(localPlace))
-            {
-                var tile = tilemapHole.GetTile(localPlace);
-                result.Add(localPlace, tile);
-            }
-        }
-
-        return result;
-    }
 
     public void FixedUpdate()
     {
@@ -95,30 +78,71 @@ public class Game : MonoBehaviour
             {
                 var plant = land.Plantings[i];
 
-                if (holesPosition.Count < (plant.Square - 1))
+                if (plant?.FruitId > 0)
                 {
-                    var last = holesPosition.Count - 1;
-                    var hole = holesPosition[last];
-                    AddPlant(hole, plant);
-                }
-                else
-                {
-                    var hole = holesPosition[plant.Square];
-                    AddPlant(hole, plant);
+                    if (holesPosition.Count < (plant.Square - 1))
+                    {
+                        var last = holesPosition.Count - 1;
+                        var hole = holesPosition[last];
+                        AddPlant(hole, plant);
+                    }
+                    else
+                    {
+                        var hole = holesPosition[plant.Square];
+                        AddPlant(hole, plant);
+                    }
                 }
             }
         }
 
     }
 
+    async void AddNewPlant(BoxCollider2D hole)
+    {
+        try
+        {
+            var plant = new PlantingDto();
+            plant.FruitId = selectedCrop.id;
+            var index = holesPosition.IndexOf(hole);
+            plant.Square = index;
+            var newPlant = await LandService.AddPlant(plant);
+            textAmount.text = newPlant.CoinBalance.ToString("C2");
+            AddPlant(hole, newPlant);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogException(ex);
+        }
+
+    }
+
+    async void Harvest(BoxCollider2D hole, CropTileBase tileCrop)
+    {
+        try
+        {
+            Vector3Int position = tilemapHole.WorldToCell(hole.transform.localPosition);
+            var oldPlant = await LandService.HarvestPlant(tileCrop.plantingDto);
+            textAmount.text = oldPlant.CoinBalance.ToString("C2");
+            tilemapHole.SetTile(position, tileHole);
+            cropTiles.Remove(tileCrop);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogException(ex);
+        }
+    }
+
     private void AddPlant(BoxCollider2D hole, PlantingDto plant)
     {
-        CropTileBase tileCrop = ScriptableObject.CreateInstance<CropTileBase>();
-        tileCrop.cropSo = crops[0];
-        tileCrop.plantingDto = plant;
-        Vector3Int position = tilemapHole.WorldToCell(hole.transform.localPosition);
-        tilemapHole.SetTile(position, tileCrop);
-        cropTiles.Add(tileCrop);
+        if (plant?.FruitId > 0)
+        {
+            CropTileBase tileCrop = ScriptableObject.CreateInstance<CropTileBase>();
+            tileCrop.cropSo = crops[0];
+            tileCrop.plantingDto = plant;
+            Vector3Int position = tilemapHole.WorldToCell(hole.transform.localPosition);
+            tilemapHole.SetTile(position, tileCrop);
+            cropTiles.Add(tileCrop);
+        }
     }
 
 
