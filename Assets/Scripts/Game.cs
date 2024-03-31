@@ -3,6 +3,7 @@ using Assets.Scripts.Service.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime;
@@ -16,7 +17,6 @@ public class Game : MonoBehaviour
     private LandDto land;
 
     public Tilemap tilemapHole;
-    public Tilemap tilemapCrops;
     public Tile hole;
     public List<CropSo> crops;
     public List<CropTileBase> cropTiles = new List<CropTileBase>();
@@ -52,12 +52,19 @@ public class Game : MonoBehaviour
                 cropTiles.Add(tileCrop);
 
             }
+
+            var found = cropTiles.FirstOrDefault(x => x == tile);
+            if (found?.CanHarvest == true)
+            {
+                tilemapHole.SetTile(position, hole);
+                cropTiles.Remove(found);
+            }
         }
     }
 
     public void FixedUpdate()
     {
-        tilemapHole.RefreshAllTiles();       
+        tilemapHole.RefreshAllTiles();
     }
 
     public async void GetLand()

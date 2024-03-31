@@ -12,11 +12,19 @@ public class CropTileBase : TileBase
     public ITilemap tilemap;
     public Vector3Int position;
 
+    public bool CanHarvest
+    {
+        get
+        {
+            var time = DateTime.Now - plantingDto.PlantingDate;
+            return time.TotalSeconds >= cropSo.growTime;
+        }
+    }
+
     // Docs: https://docs.unity3d.com/ScriptReference/Tilemaps.TileBase.GetTileData.html
 
     public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData)
     {
-        Debug.Log("get tile data");
         tileData.sprite = cropSo.plantStates[0];
         if (plantingDto != null)
         {
@@ -29,6 +37,14 @@ public class CropTileBase : TileBase
                 if (x > last)
                 {
                     x = last;
+                }
+                if (x == last && !CanHarvest)
+                {
+                    x = last - 1;
+                }
+                if (x < 0)
+                {
+                    x = 0;
                 }
                 tileData.sprite = cropSo.plantStates[x];
             }
