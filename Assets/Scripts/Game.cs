@@ -1,5 +1,6 @@
 using Assets.Scripts.Service;
 using Assets.Scripts.Service.Models;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -16,16 +17,17 @@ public class Game : MonoBehaviour
 
     public Tilemap tilemapHole;
     public Tilemap tilemapCrops;
-    public CropSo[] crops;
-    public List<GameObject> UITiles;
-    public int selectedCrops = 0;
-    public Transform tileGridUI;
+    public Tile hole;
+    public List<CropSo> crops;
+    public List<CropTileBase> cropTiles = new List<CropTileBase>();
+    public CropSo selectedCrop;
 
 
     // Start is called before the first frame update
     void Start()
     {
         // GetLand();
+        selectedCrop = crops[0];
     }
 
 
@@ -41,18 +43,28 @@ public class Game : MonoBehaviour
 
             TileBase tile = tilemapHole.GetTile(position);
             Debug.Log(tile);
-            if (tile != null)
+            if (tile?.name == "tileset_16px_777")
             {
                 CropTileBase tileCrop = ScriptableObject.CreateInstance<CropTileBase>();
                 tileCrop.cropSo = crops[0];
+                tileCrop.plantingDto = new PlantingDto() { PlantingDate = DateTime.Now };
                 tilemapHole.SetTile(position, tileCrop);
+                cropTiles.Add(tileCrop);
+
             }
         }
+    }
+
+    public void FixedUpdate()
+    {
+        tilemapHole.RefreshAllTiles();       
     }
 
     public async void GetLand()
     {
         land = await LandService.GetLand();
+
+
     }
 
 

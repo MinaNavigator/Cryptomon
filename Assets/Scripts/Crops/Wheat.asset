@@ -14,7 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 1
   presentation: {fileID: 21300000, guid: 18f6f80558cd93c4981a4e3f18904b30, type: 3}
-  seed: {fileID: 21300000, guid: b3652ef646d60194cb22398d8790de19, type: 3}
-  leaf: {fileID: 21300000, guid: 8e087cf5529414e498758edefc73912a, type: 3}
-  plant: {fileID: 21300000, guid: 15c4790c26b63cc4c88efe23e660afa8, type: 3}
+  plantStates:
+  - {fileID: 21300000, guid: b3652ef646d60194cb22398d8790de19, type: 3}
+  - {fileID: 21300000, guid: 8e087cf5529414e498758edefc73912a, type: 3}
+  - {fileID: 21300000, guid: a154bbe485928514ab3ecd93c759dd6a, type: 3}
+  - {fileID: 21300000, guid: c0945a14bcac64e4e8617f651ad6d65a, type: 3}
+  - {fileID: 21300000, guid: 15c4790c26b63cc4c88efe23e660afa8, type: 3}
   minLevel: 0
+  growTime: 120
+  seedPrice: 0.02
+  plantPrice: 0.04

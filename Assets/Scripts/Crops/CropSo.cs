@@ -7,8 +7,9 @@ public class CropSo : ScriptableObject
 {
     public int id;
     public Sprite presentation;
-    public Sprite seed;
-    public Sprite leaf;
-    public Sprite plant;
+    public List<Sprite> plantStates;
     public int minLevel;
+    public int growTime;
+    public float seedPrice;
+    public float plantPrice;
 }
