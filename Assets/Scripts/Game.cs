@@ -29,7 +29,7 @@ public class Game : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GetLand();
+        // GetLand();
         textAmount.text = GameContext.Instance?.Account?.CoinBalance.ToString("C2");
 
         selectedCrop = crops[0];
@@ -105,6 +105,7 @@ public class Game : MonoBehaviour
             plant.FruitId = selectedCrop.id;
             var index = holesPosition.IndexOf(hole);
             plant.Square = index;
+            plant.PlantingDate = DateTime.UtcNow;
             var newPlant = await LandService.AddPlant(plant);
             textAmount.text = newPlant.CoinBalance.ToString("C2");
             AddPlant(hole, newPlant);
@@ -137,7 +138,7 @@ public class Game : MonoBehaviour
         if (plant?.FruitId > 0)
         {
             CropTileBase tileCrop = ScriptableObject.CreateInstance<CropTileBase>();
-            tileCrop.cropSo = crops[0];
+            tileCrop.cropSo = selectedCrop;
             tileCrop.plantingDto = plant;
             Vector3Int position = tilemapHole.WorldToCell(hole.transform.localPosition);
             tilemapHole.SetTile(position, tileCrop);
@@ -145,5 +146,19 @@ public class Game : MonoBehaviour
         }
     }
 
+    public void ChangeCrop(int fruitId)
+    {
+        var fruit = crops.Where(x => x.id == fruitId).FirstOrDefault();
+        if (fruit != null)
+        {
+            fruit = crops.First();
+        }
+        selectedCrop = fruit;
+    }
+
+    public void ShowCrop()
+    {
+        SceneManager.LoadScene("Crops",LoadSceneMode.Additive);
+    }
 
 }

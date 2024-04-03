@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Game.unity
     guid: c8c376d9ad41340409dc8c729a06358d
+  - enabled: 1
+    path: Assets/Scenes/Crops.unity
+    guid: 8c631d16ff20c994186c288859bb446d
   m_configObjects: {}
