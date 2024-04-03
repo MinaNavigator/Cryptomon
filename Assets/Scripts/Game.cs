@@ -146,11 +146,15 @@ public class Game : MonoBehaviour
         if (plant?.FruitId > 0)
         {
             CropTileBase tileCrop = ScriptableObject.CreateInstance<CropTileBase>();
-            tileCrop.cropSo = selectedCrop;
-            tileCrop.plantingDto = plant;
-            Vector3Int position = tilemapHole.WorldToCell(hole.transform.localPosition);
-            tilemapHole.SetTile(position, tileCrop);
-            cropTiles.Add(tileCrop);
+            var crop = crops.Where(c => c.id == plant.FruitId).FirstOrDefault();
+            if (crop != null)
+            {
+                tileCrop.cropSo = crop;
+                tileCrop.plantingDto = plant;
+                Vector3Int position = tilemapHole.WorldToCell(hole.transform.localPosition);
+                tilemapHole.SetTile(position, tileCrop);
+                cropTiles.Add(tileCrop);
+            }
         }
     }
 
