@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -12,14 +13,16 @@ public class CropMenu : MonoBehaviour
     public Button button;
     public GridLayoutGroup panel;
 
-    public static CropSo SelectedCrop;
+    //public static CropSo SelectedCrop;
+
+    public static event Action<CropSo> OnSelectCrop;
 
     // Start is called before the first frame update
     void Start()
     {
         if (crops?.Count > 0)
         {
-            SelectedCrop = crops[0];
+
             foreach (var c in crops)
             {
                 var newButton = Instantiate(button);
@@ -30,8 +33,11 @@ public class CropMenu : MonoBehaviour
                 newButton.transform.SetParent(panel.transform);
                 newButton.onClick.AddListener(() =>
                 {
-                    SelectedCrop = c;
-                    SceneManager.UnloadScene("Crops");
+                    if (OnSelectCrop != null)
+                    {
+                        OnSelectCrop(c);
+                    }
+                    SceneManager.UnloadSceneAsync("Crops");
                 });
             }
         }

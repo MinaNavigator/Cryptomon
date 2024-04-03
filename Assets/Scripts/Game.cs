@@ -10,32 +10,40 @@ using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class Game : MonoBehaviour
 {
     private LandDto land;
+    private List<CropTileBase> cropTiles = new List<CropTileBase>();
+    private CropSo selectedCrop;
 
     public Tilemap tilemapHole;
     public Tile tileHole;
     public List<CropSo> crops;
-    public List<CropTileBase> cropTiles = new List<CropTileBase>();
-    public CropSo selectedCrop;
     public List<BoxCollider2D> holesPosition;
     public TextMeshProUGUI textAmount;
+    public Image cropImage;
 
     const string HOLE_NAME = "tileset_16px_777";
 
     // Start is called before the first frame update
     void Start()
     {
-        // GetLand();
+        GetLand();
         textAmount.text = GameContext.Instance?.Account?.CoinBalance.ToString("C2");
 
         selectedCrop = crops[0];
+        cropImage.sprite = selectedCrop.presentation;
+
+        CropMenu.OnSelectCrop += CropMenu_OnSelectCrop;
     }
 
-
+    private void CropMenu_OnSelectCrop(CropSo obj)
+    {
+        selectedCrop = obj;
+        cropImage.sprite = selectedCrop.presentation;
+    }
 
     // Update is called once per frame
     void Update()
@@ -158,7 +166,7 @@ public class Game : MonoBehaviour
 
     public void ShowCrop()
     {
-        SceneManager.LoadScene("Crops",LoadSceneMode.Additive);
+        SceneManager.LoadScene("Crops", LoadSceneMode.Additive);
     }
 
 }
