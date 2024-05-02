@@ -6,6 +6,33 @@ using UnityEngine;
 using UnityEngine.Networking;
 public class UnityRequestClient
 {
+    public async static Task Get(string url)
+    {
+
+        using (var unityRequest = new UnityWebRequest(url, "GET"))
+        {
+            Debug.Log("token bearer " + GameContext.Instance.Token);
+            if (!string.IsNullOrEmpty(GameContext.Instance.Token))
+            {
+                unityRequest.SetRequestHeader("Authorization", "Bearer " + GameContext.Instance.Token);
+            }
+            unityRequest.SetRequestHeader("Content-Type", "application/json");
+            unityRequest.downloadHandler = new DownloadHandlerBuffer();
+
+            await unityRequest.SendWebRequest();
+
+            if (unityRequest.error != null)
+            {
+#if DEBUG
+                Debug.LogError(unityRequest.error);
+#endif
+                throw new InvalidOperationException("Error server " + unityRequest.error);
+            }
+
+        }
+    }
+
+
     public async static Task<T> Get<T>(string url)
     {
 

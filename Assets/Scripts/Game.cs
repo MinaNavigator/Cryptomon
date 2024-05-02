@@ -17,6 +17,7 @@ public class Game : MonoBehaviour
     private LandDto land;
     private List<CropTileBase> cropTiles = new List<CropTileBase>();
     private CropSo selectedCrop;
+    private bool openModalCrop = false;
 
     public Tilemap tilemapHole;
     public Tile tileHole;
@@ -37,10 +38,19 @@ public class Game : MonoBehaviour
         cropImage.sprite = selectedCrop.presentation;
 
         CropMenu.OnSelectCrop += CropMenu_OnSelectCrop;
+
+        // get deposit every minutes
+        InvokeRepeating("GetDeposits", 5, 60);
+    }
+
+    async void GetDeposits()
+    {
+        await LandService.GetDeposits();
     }
 
     private void CropMenu_OnSelectCrop(CropSo obj)
     {
+        openModalCrop = false;
         selectedCrop = obj;
         cropImage.sprite = selectedCrop.presentation;
     }
@@ -170,7 +180,11 @@ public class Game : MonoBehaviour
 
     public void ShowCrop()
     {
-        SceneManager.LoadScene("Crops", LoadSceneMode.Additive);
+        if (!openModalCrop)
+        {
+            SceneManager.LoadScene("Crops", LoadSceneMode.Additive);
+            openModalCrop = true;
+        }
     }
 
 }

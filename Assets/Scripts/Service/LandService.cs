@@ -33,6 +33,22 @@ namespace Assets.Scripts.Service
             return response;
         }
 
+        public static async Task GetDeposits()
+        {
+            try
+            {
+                Debug.Log("GetDeposits");
+                var url = $"{serviceUrl}api/land/GetDeposits";
+                await UnityRequestClient.Get(url);
+
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(ex.Message);
+            }
+
+        }
+
         public static async Task<PlantingDto> AddPlant(PlantingDto plant)
         {
             Debug.Log("add plant");
