@@ -190,6 +190,7 @@ public class Game : MonoBehaviour
     {
         if (!openModalCrop)
         {
+            CropMenu.SelectedCrop = selectedCrop;
             SceneManager.LoadScene("Crops", LoadSceneMode.Additive);
             openModalCrop = true;
         }

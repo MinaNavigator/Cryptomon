@@ -15,6 +15,7 @@ public class CropMenu : MonoBehaviour
     public GridLayoutGroup panel;
     public static CropSo SelectedCrop;
 
+    public Image plantImage;
     public TextMeshProUGUI txtName;
     public TextMeshProUGUI txtPrice;
     public TextMeshProUGUI txtTime;
@@ -34,14 +35,11 @@ public class CropMenu : MonoBehaviour
             if (SelectedCrop == null)
             {
                 SelectedCrop = crops.First();
-                SetInfo(SelectedCrop);
             }
 
             foreach (var c in crops)
             {
                 var newButton = Instantiate(button);
-                var textUI = newButton.GetComponentInChildren<TextMeshProUGUI>();
-                textUI.text = c.seedPrice.ToString("C2");
                 var image = newButton.GetComponent<Image>();
                 image.sprite = c.presentation;
                 newButton.transform.SetParent(panel.transform);
@@ -51,6 +49,11 @@ public class CropMenu : MonoBehaviour
                     SetInfo(SelectedCrop);
                 });
             }
+        }
+
+        if (SelectedCrop != null)
+        {
+            SetInfo(SelectedCrop);
         }
     }
 
@@ -85,5 +88,6 @@ public class CropMenu : MonoBehaviour
         txtPrice.text = "Seed price : " + crop.seedPrice.ToString("C2");
         txtTime.text = $"Grow time : {crop.growTime.ToString()} s";
         txtSell.text = "Sell price : " + crop.plantPrice.ToString("C2");
+        plantImage.sprite = crop.presentation;
     }
 }
