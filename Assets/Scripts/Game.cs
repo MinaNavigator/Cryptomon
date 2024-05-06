@@ -38,6 +38,7 @@ public class Game : MonoBehaviour
         cropImage.sprite = selectedCrop.presentation;
 
         CropMenu.OnSelectCrop += CropMenu_OnSelectCrop;
+        CropMenu.OnClose += CropMenu_OnClose;
 
         // get deposit every minutes
         InvokeRepeating("GetDeposits", 5, 60);
@@ -54,6 +55,13 @@ public class Game : MonoBehaviour
         selectedCrop = obj;
         cropImage.sprite = selectedCrop.presentation;
     }
+
+
+    private void CropMenu_OnClose()
+    {
+        openModalCrop = false;
+    }
+
 
     // Update is called once per frame
     void Update()

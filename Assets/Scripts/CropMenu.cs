@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -12,16 +13,29 @@ public class CropMenu : MonoBehaviour
     public List<CropSo> crops;
     public Button button;
     public GridLayoutGroup panel;
+    public static CropSo SelectedCrop;
+
+    public TextMeshProUGUI txtName;
+    public TextMeshProUGUI txtPrice;
+    public TextMeshProUGUI txtTime;
+    public TextMeshProUGUI txtSell;
+    public TextMeshProUGUI txtLevel;
 
     //public static CropSo SelectedCrop;
 
     public static event Action<CropSo> OnSelectCrop;
+    public static event Action OnClose;
 
     // Start is called before the first frame update
     void Start()
     {
         if (crops?.Count > 0)
         {
+            if (SelectedCrop == null)
+            {
+                SelectedCrop = crops.First();
+                SetInfo(SelectedCrop);
+            }
 
             foreach (var c in crops)
             {
@@ -33,11 +47,8 @@ public class CropMenu : MonoBehaviour
                 newButton.transform.SetParent(panel.transform);
                 newButton.onClick.AddListener(() =>
                 {
-                    if (OnSelectCrop != null)
-                    {
-                        OnSelectCrop(c);
-                    }
-                    SceneManager.UnloadSceneAsync("Crops");
+                    SelectedCrop = c;
+                    SetInfo(SelectedCrop);
                 });
             }
         }
@@ -47,5 +58,32 @@ public class CropMenu : MonoBehaviour
     void Update()
     {
 
+    }
+
+    public void SelectCrop()
+    {
+        if (OnSelectCrop != null)
+        {
+            OnSelectCrop(SelectedCrop);
+        }
+        SceneManager.UnloadSceneAsync("Crops");
+    }
+    public void SelectClose()
+    {
+        if (OnClose != null)
+        {
+            OnClose();
+        }
+        SceneManager.UnloadSceneAsync("Crops");
+    }
+
+
+    private void SetInfo(CropSo crop)
+    {
+        txtName.text = crop.name;
+        txtLevel.text = $"Min farm level : {crop.minLevel.ToString()}";
+        txtPrice.text = "Seed price : " + crop.seedPrice.ToString("C2");
+        txtTime.text = $"Grow time : {crop.growTime.ToString()} s";
+        txtSell.text = "Sell price : " + crop.plantPrice.ToString("C2");
     }
 }
